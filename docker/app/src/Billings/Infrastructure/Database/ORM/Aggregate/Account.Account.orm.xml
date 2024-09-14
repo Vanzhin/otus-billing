@@ -1,0 +1,21 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Billings\Domain\Aggregate\Account\Account" table="billing_account">
+        <id name="id" type="string" length="26">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="balance" type="float"/>
+        <field name="userId" column="user_id" type="string" length="26"/>
+        <one-to-many field="transactions" target-entity="App\Billings\Domain\Aggregate\Account\AccountTransaction"
+                     mapped-by="account">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+        <unique-constraints>
+            <unique-constraint fields="userId"/>
+        </unique-constraints>
+    </entity>
+</doctrine-mapping>

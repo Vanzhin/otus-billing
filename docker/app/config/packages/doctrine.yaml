@@ -19,12 +19,13 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
         mappings:
-            Notifications:
+            Billings:
                 is_bundle: false
                 type: xml
-                dir: '%kernel.project_dir%/src/Notifications/Infrastructure/Database/ORM/Aggregate'
-                prefix: 'App\Notifications\Domain\Aggregate'
-                alias: Notifications
+                dir: '%kernel.project_dir%/src/Billings/Infrastructure/Database/ORM/Aggregate'
+                prefix: 'App\Billings\Domain\Aggregate'
+                alias: Billings
+
 
 
 #            App:
