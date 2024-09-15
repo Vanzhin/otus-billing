@@ -15,8 +15,8 @@ class AccountTransaction
     public function __construct(
         Account                  $account,
         private float            $sum,
-        private readonly ?string $orderId = null,
-        private readonly ?string $documentId = null,
+        private readonly TransactionType $type,
+        private readonly string $documentId,
     )
     {
         $this->id = UlidService::generate();
@@ -39,11 +39,6 @@ class AccountTransaction
         return $this->createdAt;
     }
 
-    public function getOrderId(): string
-    {
-        return $this->orderId;
-    }
-
     public function getSum(): float
     {
         return $this->sum;
@@ -52,5 +47,10 @@ class AccountTransaction
     public function getDocumentId(): ?string
     {
         return $this->documentId;
+    }
+
+    public function getType(): TransactionType
+    {
+        return $this->type;
     }
 }

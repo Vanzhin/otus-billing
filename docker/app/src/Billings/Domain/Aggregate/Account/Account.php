@@ -75,7 +75,6 @@ class Account
     {
         $newBalance = $this->balance + $sum;
         $this->setBalance($newBalance);
-        $this->transactions[] = new AccountTransaction($this, $sum);
     }
 
 

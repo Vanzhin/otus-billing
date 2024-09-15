@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Billings\Infrastructure\Controller;
 
-use App\Billings\Application\UseCase\Command\CreateAccount\CreateAccountCommand;
-use App\Billings\Application\UseCase\Command\UpdateAccountBalance\UpdateAccountBalanceCommand;
-use App\Billings\Application\UseCase\Query\FindAccount\FindAccountQuery;
+use App\Billings\Application\UseCase\Command\CreateAccountTransaction\CreateAccountTransactionCommand;
+use App\Billings\Domain\Aggregate\Account\TransactionType;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Shared\Application\Query\QueryBusInterface;
 use App\Shared\Domain\Service\AssertService;
@@ -16,8 +15,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/billing/account', name: 'app_api_billing_account')]
-class AccountController extends AbstractController
+#[Route('/billing/account/transaction', name: 'app_api_billing_transaction')]
+class AccountTransactionController extends AbstractController
 {
     public function __construct(
         private readonly QueryBusInterface     $queryBus,
@@ -31,22 +30,20 @@ class AccountController extends AbstractController
     public function add(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $balance = $data['balance'] ?? null;
+        //проверка
+        $sum = $data['sum'] ?? null;
+        AssertService::numeric($sum, 'Sum must be numeric.');
         $userUlid = $this->headersService->getUserUlid();
         AssertService::notNull($userUlid, 'No user\'s id provided.');
-        $command = new CreateAccountCommand($userUlid, $balance ?? 0);
+        $documentId = $data['document_id'] ?? null;
+        AssertService::notNull($documentId, 'Property \'document_id\' required.');
+        $type = $data['type'] ?? null;
+        AssertService::inArray($type,
+            TransactionType::values(),
+            'Invalid type provided.');
+
+        $command = new CreateAccountTransactionCommand($userUlid, $sum, $documentId, $type);
         $result = $this->commandBus->execute($command);
-
-        return new JsonResponse($result);
-    }
-
-    #[Route('', name: 'find_by_user_id', methods: ['GET'])]
-    public function getByUserId(): JsonResponse
-    {
-        $userUlid = $this->headersService->getUserUlid();
-        AssertService::notNull($userUlid, 'No user\'s id provided.');
-        $query = new FindAccountQuery($userUlid);
-        $result = $this->queryBus->execute($query);
 
         return new JsonResponse($result);
     }

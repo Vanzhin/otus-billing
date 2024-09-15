@@ -10,9 +10,6 @@
         <field name="userId" column="user_id" type="string" length="26"/>
         <one-to-many field="transactions" target-entity="App\Billings\Domain\Aggregate\Account\AccountTransaction"
                      mapped-by="account">
-            <cascade>
-                <cascade-persist/>
-            </cascade>
         </one-to-many>
         <unique-constraints>
             <unique-constraint fields="userId"/>

@@ -6,12 +6,15 @@
         <id name="id" type="string" length="26">
             <generator strategy="NONE"/>
         </id>
-        <field name="orderId" column="order_id" type="string" length="26" nullable="true"/>
+        <field name="type" enum-type=" App\Billings\Domain\Aggregate\Account\TransactionType" length="26"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="sum" type="float"/>
         <field name="documentId" column="document_id" type="string" length="26" nullable="true"/>
         <many-to-one field="account" target-entity="App\Billings\Domain\Aggregate\Account\Account"
                      inversed-by="transactions">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
         </many-to-one>
     </entity>
 </doctrine-mapping>
