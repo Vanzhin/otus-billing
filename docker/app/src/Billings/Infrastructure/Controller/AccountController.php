@@ -28,13 +28,11 @@ class AccountController extends AbstractController
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
-    public function add(Request $request): JsonResponse
+    public function add(): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $balance = $data['balance'] ?? null;
         $userUlid = $this->headersService->getUserUlid();
         AssertService::notNull($userUlid, 'No user\'s id provided.');
-        $command = new CreateAccountCommand($userUlid, $balance ?? 0);
+        $command = new CreateAccountCommand($userUlid, 0);
         $result = $this->commandBus->execute($command);
 
         return new JsonResponse($result);
